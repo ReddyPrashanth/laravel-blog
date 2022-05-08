@@ -50,6 +50,7 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./mysql/scripts/init.sql://docker-entrypoint-initdb.d/1.sql
     networks:
       - blog-network
 volumes:
