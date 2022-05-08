@@ -36,7 +36,13 @@ pipeline {
         }
         stage("Test") {
             steps{
-                sh 'echo "Environment setup is complete"'
+                sh "docker-compose -f docker-compose-test.yml exec app php artisan test --coverage"
+            }
+        }
+        stage("Cleanup") {
+            steps{
+                sh "docker-compose -f docker-compose-test.yml down"
+                sh "echo 'Pipeline finished executing.'"
             }
         }
     }

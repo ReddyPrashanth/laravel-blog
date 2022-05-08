@@ -17,7 +17,6 @@ services:
     volumes:
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
-      - ./mysql/scripts/init.sql://docker-entrypoint-initdb.d/1.sql
     networks:
       - blog-network
   
@@ -50,6 +49,7 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./mysql/scripts/init.sql://docker-entrypoint-initdb.d/1.sql
     networks:
       - blog-network
 volumes:
