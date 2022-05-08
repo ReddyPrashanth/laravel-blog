@@ -27,6 +27,7 @@ pipeline {
                 sh "sed -i 's/DB_HOST=127.0.0.1/DB_HOST=${DB_HOST}/g' application/.env"
                 sh "sed -i 's/DB_PASSWORD=/DB_PASSWORD=${DB_PASSWORD}/g' application/.env"
                 sh "docker-compose -f docker-compose-dev.yml up -d"
+                sh "docker-compose -f docker-compose-dev.yml exec app composer install"
                 sh "docker-compose -f docker-compose-dev.yml exec app php artisan key:generate"
                 sh "docker-compose -f docker-compose-dev.yml exec app php artisan config:cache"
                 sh "docker-compose -f docker-compose-dev.yml exec app php artisan route:cache"
