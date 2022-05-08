@@ -22,10 +22,10 @@ pipeline {
             steps {
                 sh 'rm -f application/.env'
                 sh 'cp application/.env.example application/.env'
-                sh 'echo DB_HOST=${DB_HOST} >> .env'
-                sh 'echo DB_USERNAME=${DB_USERNAME} >> .env'
-                sh 'echo DB_DATABASE=${DB_DATABASE} >> .env'
-                sh 'echo DB_PASSWORD=${DB_PASSWORD} >> .env'
+                sh 'echo DB_HOST=${DB_HOST} >> application/.env'
+                sh 'echo DB_USERNAME=${DB_USERNAME} >> application/.env'
+                sh 'echo DB_DATABASE=${DB_DATABASE} >> application/.env'
+                sh 'echo DB_PASSWORD=${DB_PASSWORD} >> application/.env'
             }
         }
         stage("Test") {
