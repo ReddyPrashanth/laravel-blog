@@ -20,12 +20,12 @@ pipeline {
                 DB_PASSWORD = 'secret'
             }
             steps {
-                sh 'rm -f application/.env'
-                sh 'cp application/.env.example application/.env'
-                sh 'echo DB_HOST=${DB_HOST} >> application/.env'
-                sh 'echo DB_USERNAME=${DB_USERNAME} >> application/.env'
-                sh 'echo DB_DATABASE=${DB_DATABASE} >> application/.env'
-                sh 'echo DB_PASSWORD=${DB_PASSWORD} >> application/.env'
+                sh "rm -f application/.env"
+                sh "cp application/.env.example application/.env"
+                sh "sed -i 's/DB_HOST=database/DB_HOST=${DB_DATABASE}/g' application/.env"
+                sh "sed -i 's/DB_USERNAME=laraveluser/DB_HOST=${DB_USERNAME}/g' application/.env"
+                sh "sed -i 's/DB_HOST=database/DB_HOST=${DB_HOST}/g' application/.env"
+                sh "sed -i 's/DB_PASSWORD=secret/DB_HOST=${DB_PASSWORD}/g' application/.env"
             }
         }
         stage("Test") {
