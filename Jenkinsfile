@@ -28,7 +28,7 @@ pipeline {
                 sh 'echo DB_PASSWORD=${DB_PASSWORD} >> .env'
             }
         }
-        sage("Test") {
+        stage("Test") {
             steps{
                 sh 'echo "Environment setup is complete"'
             }
