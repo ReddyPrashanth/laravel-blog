@@ -22,10 +22,10 @@ pipeline {
             steps {
                 sh "rm -f application/.env"
                 sh "cp application/.env.example application/.env"
-                sh "sed -i 's/DB_DATABASE=laravel/DB_HOST=${DB_DATABASE}/g' application/.env"
-                sh "sed -i 's/DB_USERNAME=root/DB_HOST=${DB_USERNAME}/g' application/.env"
+                sh "sed -i 's/DB_DATABASE=laravel/DB_DATABASE=${DB_DATABASE}/g' application/.env"
+                sh "sed -i 's/DB_USERNAME=root/DB_USERNAME=${DB_USERNAME}/g' application/.env"
                 sh "sed -i 's/DB_HOST=127.0.0.1/DB_HOST=${DB_HOST}/g' application/.env"
-                sh "sed -i 's/DB_PASSWORD=/DB_HOST=${DB_PASSWORD}/g' application/.env"
+                sh "sed -i 's/DB_PASSWORD=/DB_PASSWORD=${DB_PASSWORD}/g' application/.env"
             }
         }
         stage("Test") {
