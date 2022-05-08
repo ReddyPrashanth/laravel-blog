@@ -15,6 +15,7 @@ services:
     depends_on:
       - database
     volumes:
+      - ./application:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
     networks:

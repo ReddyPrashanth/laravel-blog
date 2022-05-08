@@ -36,7 +36,7 @@ pipeline {
         }
         stage("Test") {
             steps{
-                sh "docker-compose -f docker-compose-test.yml exec app php artisan test --coverage"
+                sh "docker-compose -f docker-compose-test.yml exec app php artisan test --coverage --without-tty"
             }
         }
         stage("Cleanup") {
