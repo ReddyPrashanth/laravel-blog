@@ -16,8 +16,8 @@ pipeline {
             environment {
                 DB_HOST = 'database'
                 DB_DATABASE = 'laravel_blog'
-                DB_USERNAME = credentials("laravel-user")
-                DB_PASSWORD = credentials("laravel-password")
+                DB_USERNAME = 'laraveluser'
+                DB_PASSWORD = 'secret'
             }
             steps {
                 sh 'rm -f application/.env'
