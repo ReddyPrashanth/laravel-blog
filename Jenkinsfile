@@ -1,17 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage("Prepare") {
-            steps {
-              checkout([$class: 'GitSCM', 
-                branches: [[name: '*/master']],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[$class: 'CleanCheckout']],
-                submoduleCfg: [], 
-                userRemoteConfigs: [[url: 'https://github.com/ReddyPrashanth/laravel-blog.git']]])
-              sh "ls -ltr"
-            }
-        }
         stage("Build") {
             environment {
                 DB_HOST = 'database'
