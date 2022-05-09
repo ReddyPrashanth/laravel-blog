@@ -42,9 +42,6 @@ RUN useradd -u 1000 -ms /bin/bash -g www www
 # Copy existing application directory contents
 COPY ./application /var/www
 
-# Change ownership of /var/www on jenkins agent
-RUN chown www:www /var/www
-
 # Copy existing application directory permissions
 COPY --chown=www:www ./application /var/www
 
