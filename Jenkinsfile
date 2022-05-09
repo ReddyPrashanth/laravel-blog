@@ -39,11 +39,11 @@ pipeline {
                 sh "docker-compose -f docker-compose-dev.yml exec app php artisan test --coverage"
             }
         }
-        stage("Cleanup") {
-            steps{
-                sh "docker-compose -f docker-compose-dev.yml down"
-                sh "echo 'Pipeline finished executing.'"
-            }
+    }
+    post {
+        always {
+            sh "docker-compose -f docker-compose-dev.yml down"
+            sh "echo 'Pipeline finished executing.'"
         }
     }
 }
