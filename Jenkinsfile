@@ -1,14 +1,14 @@
 pipeline {
     agent any
+    environment {
+        APP_VERSION = 0.1
+        DB_HOST = 'database'
+        DB_DATABASE = 'laravel_blog'
+        DB_USERNAME = 'laraveluser'
+        DB_PASSWORD = 'secret'
+    }
     stages {
         stage("Build") {
-            environment {
-                APP_VERSION = 0.1
-                DB_HOST = 'database'
-                DB_DATABASE = 'laravel_blog'
-                DB_USERNAME = 'laraveluser'
-                DB_PASSWORD = 'secret'
-            }
             steps {
                 sh "rm -f application/.env"
                 sh "cp application/.env.example application/.env"
