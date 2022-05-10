@@ -16,7 +16,7 @@ class PingTest extends TestCase
     public function test_ping()
     {
         $expected = array(
-            'message' => 'Welcome to blog API 2022. Thanks for visiting our site.',
+            'message' => 'Welcome to blog API 2022. Visit us again.',
             'status' => 'OK'
         );  
         $response = $this->get('/');
