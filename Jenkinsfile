@@ -36,7 +36,7 @@ pipeline {
             steps {
                 sh "docker-compose exec app composer install --no-interaction --no-plugins --no-scripts --no-dev --prefer-dist"
                 sh "docker-compose exec app composer dump-autoload"
-                sh "docker build -t blogsite_prod:${APP_VERSION}"
+                sh "docker build -t blogsite_prod:${APP_VERSION} ."
             }
         }
     }
