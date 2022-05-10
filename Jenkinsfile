@@ -2,6 +2,9 @@ pipeline {
     agent any
     stages {
         stage("Build") {
+            when {
+                branch "develop"
+            }
             environment {
                 APP_VERSION = 0.1
                 DB_HOST = 'database'
@@ -25,19 +28,27 @@ pipeline {
             }
         }
         stage("Test") {
+            when {
+                branch "develop"
+            }
             steps{
                 sh "docker-compose exec app php artisan test --coverage"
             }
         }
         stage("Stage Build") {
-            sh "docker-compose exec app composer install --no-interaction --no-plugins --no-scripts --no-dev --prefer-dist"
-            sh "docker-compose exec app composer dump-autoload"
-            sh "docker build -t blogsite_prod:${APP_VERSION}"
+            when {
+                branch "master"
+            }
+            steps {
+                sh "docker-compose exec app composer install --no-interaction --no-plugins --no-scripts --no-dev --prefer-dist"
+                sh "docker-compose exec app composer dump-autoload"
+                sh "docker build -t blogsite_prod:${APP_VERSION}"
+            }
         }
     }
     post {
         always {
-            sh "docker-compose -f docker-compose-dev.yml down"
+            sh "docker-compose down"
             sh "echo 'Pipeline finished executing.'"
         }
     }
