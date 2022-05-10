@@ -2,9 +2,6 @@ pipeline {
     agent any
     stages {
         stage("Build") {
-            when {
-                branch "develop"
-            }
             environment {
                 APP_VERSION = 0.1
                 DB_HOST = 'database'
@@ -28,9 +25,6 @@ pipeline {
             }
         }
         stage("Test") {
-            when {
-                branch "develop"
-            }
             steps{
                 sh "docker-compose exec app php artisan test --coverage"
             }
