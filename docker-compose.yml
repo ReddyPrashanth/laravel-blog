@@ -36,21 +36,20 @@ services:
       - blog-network
 
   database:
-    image: mysql:5.7.22
+    image: postgres:10.5
     container_name: database
     restart: unless-stopped
     tty: true
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
       MYSQL_DATABASE: laravel_blog
       MYSQL_ROOT_PASSWORD: secret
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - dbdata:/var/lib/mysql
-      - ./mysql/my.cnf:/etc/mysql/my.cnf
-      - ./mysql/scripts/init.sql://docker-entrypoint-initdb.d/1.sql
+      - dbdata:/var/lib/postgresql/data
+      - ./database/scripts/init.sh:/docker-entrypoint-initdb.d/init-user-db.sh
     networks:
       - blog-network
 volumes:
