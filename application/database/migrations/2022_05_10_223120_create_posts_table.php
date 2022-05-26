@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->text('description')->nullable();
-            $table->string('img_url', 255)->nullable();
+            $table->string('gist', 36)->nullable();
             $table->timestamps();
         });
     }

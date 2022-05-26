@@ -25,9 +25,9 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            "title" => $this->faker->sentence(4),
-            "description" => $this->faker->paragraph(),
-            "img_url" => $this->faker->url()
+            "title" => $this->faker->sentence(10),
+            "description" => $this->faker->paragraph(10),
+            "gist" => $this->faker->randomElement([null, "7a29051392152a14c8fffe5c25d057a2"])
         ];
     }
 }

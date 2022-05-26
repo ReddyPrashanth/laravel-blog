@@ -26,7 +26,8 @@ class StorePostRequest extends FormRequest
         return [
             "title" => "required|max:255",
             "description" => "nullable|string",
-            "img_url" => "nullable|max:255|url",
+            "gist" => "nullable|string|max:36",
+            "files" => "nullable|file"
         ];
     }
 }

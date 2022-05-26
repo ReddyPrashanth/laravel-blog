@@ -15,6 +15,12 @@ abstract class TestCase extends BaseTestCase
 
     private Generator $faker;
 
+    protected $headers = [
+        "Accept" => "application/json",
+        "Content-Type" => "application/json"
+    ];
+
+
     public function setUp(): void
     {
         parent::setUp();

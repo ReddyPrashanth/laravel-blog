@@ -2,18 +2,24 @@
 
 namespace Tests\Feature\Models;
 
+use App\Models\Content;
 use App\Models\Post;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PostTest extends TestCase
 {
     private $post;
 
+    private $contents;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->post = Post::factory()->create()->toArray();
+        $this->contents = Content::factory()->create(["post_id" => $this->post["id"]])->toArray();
     }
 
     /**
@@ -36,6 +42,8 @@ class PostTest extends TestCase
 
     public function test_get_post()
     {
+        $this->post["contents"] = [$this->contents];
+
         $response = $this->get(
             route(
                 "posts.show", 
@@ -54,7 +62,15 @@ class PostTest extends TestCase
 
     public function test_create_post()
     {
-        $payload = Post::factory()->make()->getAttributes();
+        Storage::fake("photos");
+
+        $post = Post::factory()->make();
+        $payload = [
+            "title" => $post->title,
+            "description" => $post->description,
+            "gist" => $post->gist,
+            "files" => UploadedFile::fake()->image("photo1.jpg")
+        ];
 
         $response = $this->post(
             route("posts.store"),
@@ -67,12 +83,11 @@ class PostTest extends TestCase
                 "data" => [
                     "title",
                     "description",
-                    "img_url",
                     "created_at",
                     "updated_at"
                 ]
             ]);
-        $this->assertDatabaseHas("posts", $payload);
+        $this->assertDatabaseHas("posts", $post->toArray());
     }
 
     public function test_create_post_422()
@@ -82,10 +97,7 @@ class PostTest extends TestCase
         ];
 
         $response = $this
-            ->withHeaders([
-                "Accept" => "application/json",
-                "Content-Type" => "application/json"
-            ])
+            ->withHeaders($this->headers)
             ->post(
                 route("posts.store"),
                 $payload

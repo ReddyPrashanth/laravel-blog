@@ -22,6 +22,7 @@ class PostController extends Controller
      */
     public function __construct(PostService $service)
     {
+        $this->middleware('auth:sanctum', ['except' => ['index']]);
         $this->service = $service;
     }
 
@@ -44,8 +45,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $input = $request->only(["title", "description", "img_url"]);
-        $post = $this->service->createPost($input);
+        $post = $this->service->createPost($request);
         return new PostResource($post);
     }
 

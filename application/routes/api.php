@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\ContentController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\PostController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('posts', PostController::class);
+
+Route::middleware('auth:sanctum')->group(function() {
+    Route::apiResource('posts.contents', ContentController::class)->shallow();
+    Route::apiResource('files', FileController::class)->only([
+        "store"
+    ]);
+});
+Route::get("files/{name}", [FileController::class, 'download'])->name("files.show");
