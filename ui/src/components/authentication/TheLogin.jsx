@@ -47,7 +47,7 @@ class TheLogin extends Form {
         return (
             <div className="flex justify-center items-center h-screen-90">
                 <div className="border py-2 bg-white rounded shadow p-4 w-2/3 md:w-1/2 lg:w-1/3">
-                    {error && <TheAlert message={error} color="red" actiontype={resetAuthError.type}/>}
+                    {error && <TheAlert message={error} actiontype={resetAuthError.type}/>}
                     <FormTitle title="Login Form"/>
                     <form onSubmit={this.handleSubmit}>
                         {this.renderInput("email", "Email", "email")}

@@ -67,6 +67,11 @@ export const isAuthenticated = createSelector(
     auth => auth.isLoggedIn
 );
 
+export const getAuthenticatedUser = createSelector(
+    state => state.entities.auth,
+    auth => auth.user
+)
+
 export const getSignInError = createSelector(
     state => state.entities.auth,
     auth => auth.error

@@ -95,4 +95,9 @@ export const getPost = createSelector(
 export const getPostDetail = createSelector(
     state => state.entities.posts,
     posts => posts.postDetail
+);
+
+export const getTopRatedPosts = createSelector(
+    state => state.entities.posts,
+    posts => posts.data.slice(0,4)
 )

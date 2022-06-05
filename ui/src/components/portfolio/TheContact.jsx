@@ -1,5 +1,8 @@
 import Joi from 'joi';
+import { connect } from 'react-redux';
+import { clearContactUsError, contactUs, getContactUsError } from '../../store/entities/portfolio';
 import Form from '../shared/Form';
+import TheAlert from '../shared/TheAlert';
 
 class TheContact extends Form {
 
@@ -21,12 +24,22 @@ class TheContact extends Form {
     schema = Joi.object(this.schemaOptions);
 
     doSubmit = () => {
-        console.log(this.state);
+        this.props.sendEmail(this.state.data);
+        this.setState({
+            data: {
+                name: '',
+                email: '',
+                message: ''
+            }
+        });
     }
     render() {
+        const {error, success} = this.props;
         return (
             <div className='py-5 flex'>
                 <div className='w-full lg:w-1/2'>
+                    {error && <TheAlert message={error} actiontype={clearContactUsError.type}/>}
+                    {success && <TheAlert message={success.message} actiontype={clearContactUsError.type}/>}
                     <h4 className='text-slate-500 mb-4'>EMAIL CONTACT</h4>
                     <form onSubmit={this.handleSubmit}>
                         {this.renderInput('name', 'Full Name')}
@@ -40,4 +53,12 @@ class TheContact extends Form {
     }
 }
 
-export default TheContact;
+const mapDispatchToProps = (dispatch) => ({
+    sendEmail: (payload) => dispatch(contactUs(payload)) 
+});
+
+const mapStateToProps = (state) => ({
+    error: getContactUsError(state),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TheContact);

@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -57,6 +57,12 @@ class Handler extends ExceptionHandler
         $this->renderable(function (AuthenticationException $e) {
             return response()->json([
                 "message" => "Unauthenticated",
+            ], Response::HTTP_UNAUTHORIZED);
+        });
+
+        $this->renderable(function (UnauthorizedException $e) {
+            return response()->json([
+                "message" => $e->getMessage(),
             ], Response::HTTP_UNAUTHORIZED);
         });
     }

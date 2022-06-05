@@ -60,8 +60,8 @@ class Form extends React.Component {
 
     renderButton(text) {
         return <button className="
-            bg-teal-500
-            hover:bg-teal-700
+            bg-teal-700
+            hover:bg-teal-500
             text-white
             font-semibold
             text-xs
@@ -114,14 +114,14 @@ class Form extends React.Component {
                 />
     }
 
-    renderTextArea(name, label, rows="3") {
+    renderTextArea(name, label=null, rows="3") {
         const { data, errors } = this.state;
         return <TextArea 
                     name={name}
                     label={label}
                     rows={rows}
                     value={data[name]}
-                    placeholder={label}
+                    placeholder={label ?? 'Add Content ...'}
                     onChange={this.handleChange}
                     error={errors[name]}
                 />

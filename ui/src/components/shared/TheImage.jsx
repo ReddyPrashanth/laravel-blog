@@ -9,7 +9,7 @@ const TheImage = ({title, file}) => {
                 src={src} 
                 onError={({currentTarget: input}) => {
                     input.onerror = null;
-                    input.src="http://ui.blog.com:3000/not-found.jpg";
+                    input.src="/not-found.jpg";
                 }}
                 alt={title}
                 title={title}

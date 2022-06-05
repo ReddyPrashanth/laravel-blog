@@ -13,6 +13,8 @@ import { sessionExpired } from '../../store/entities/auth';
 class ContentForm extends Form {
 
     subTitleLabel = "Sub Title";
+    
+    annotationLabel = "Add Annotation";
 
     contentLabel = "Paragraph Content";
     
@@ -52,6 +54,7 @@ class ContentForm extends Form {
         const data = [...this.state.data];
         data.push({
             sub_title: "",
+            annotation: "",
             body: [
                 {
                     content: "",
@@ -114,6 +117,14 @@ class ContentForm extends Form {
                         type="input"
                         value={c["sub_title"]}
                         placeholder={this.subTitleLabel}
+                        onChange={(e) => this.handleChange(cInd, null, null, e)}
+                    />
+                    <Input 
+                        name="annotation"
+                        label={this.annotationLabel}
+                        type="input"
+                        value={c["annotation"]}
+                        placeholder={this.annotationLabel}
                         onChange={(e) => this.handleChange(cInd, null, null, e)}
                     />
                     {c.body.map((b, bInd) => <div key={bInd}>

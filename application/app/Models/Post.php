@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use App\Traits\ModelAuditFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, ModelAuditFields;
 
      /**
      * The attributes that are mass assignable.
@@ -21,8 +21,6 @@ class Post extends Model
         'gist'
     ];
 
-    protected $dateFormat = 'M d, Y h:m:s A';
-
     protected $with = ['contents', 'files'];
 
     public function contents()
@@ -30,18 +28,13 @@ class Post extends Model
         return $this->hasMany(Content::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function files()
     {
         return $this->hasMany(File::class);
-    }
-
-    public function getCreatedAtAttribute($value)
-    {
-        return Carbon::parse($value)->format($this->dateFormat);
-    }
-
-    public function getUpdatedAtAttribute($value)
-    {
-        return Carbon::parse($value)->format($this->dateFormat);
     }
 }

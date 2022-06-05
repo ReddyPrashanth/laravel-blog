@@ -10,10 +10,12 @@ import Loader from './components/shared/Loader';
 import ThePost from './components/posts/ThePost';
 import TheLogin from './components/authentication/TheLogin';
 import SignUp from './components/authentication/SignUp';
-import TestAuth from './components/authentication/TestAuth';
 import ProtectedRoute from './components/authentication/ProtectedRoute';
 import { loadPosts } from './store/entities/posts';
 import ThePortfolio from './components/portfolio/ThePortfolio';
+import BreadCrumbs from './components/shared/BreadCrumbs';
+import Posts from './components/posts';
+import TheFooter from './components/shared/TheFooter';
 
 const store = configureStore();
 store.dispatch(loadPosts());
@@ -23,16 +25,18 @@ function App() {
       <React.Fragment>
         <Loader />
         <NavBar />
-        <main className='container mx-auto py-4 md:py-8'>
+        <main className='container mx-auto py-4 min-h-90'>
+          <BreadCrumbs />
           <Routes>
-            <Route path='/home' element={<Home />}/>
+            <Route path='/' element={<Home />}/>
             <Route path='/portfolio/*' element={<ThePortfolio />}/>
-            <Route path='/posts'>
-              <Route path='create' element={
+            <Route path='create/post' element={
                 <ProtectedRoute>
                   <CreatePost />
                 </ProtectedRoute>
               }/>
+            <Route path='/posts'>
+              <Route path='' element={<Posts />}/>
               <Route path=':id' element={
                 <ProtectedRoute>
                   <ThePost />
@@ -43,16 +47,11 @@ function App() {
               <Route path='signin' element={<TheLogin />}/>
               <Route path='signup' element={<SignUp />}/>
             </Route>
-            <Route path='/test/auth' element={
-              <ProtectedRoute>
-                <TestAuth />
-              </ProtectedRoute>
-            }/>
             <Route path='/not-found' element={<NotFound />}/>
-            <Route path='/' element={<Navigate replace to="/home" />}/>
             <Route path='*' element={<Navigate replace to="/not-found" />}/>
           </Routes>
         </main>
+        <TheFooter />
       </React.Fragment>
     </Provider>
   );

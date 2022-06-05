@@ -4,7 +4,7 @@ import InputError from './InputError';
 const TextArea = ({name, label, rows, error, ...rest}) => {
     return (
         <div>
-            <label htmlFor={name} className="
+            {label && <label htmlFor={name} className="
                 block
                 text-sm
                 font-bold
@@ -12,7 +12,7 @@ const TextArea = ({name, label, rows, error, ...rest}) => {
                 text-gray-700
             ">
                 {label}
-            </label>
+            </label>}
             <textarea 
                 {...rest}
                 name={name}
@@ -24,6 +24,7 @@ const TextArea = ({name, label, rows, error, ...rest}) => {
                     px-2
                     py-1
                     w-full
+                    text-sm
                 "
             />
             {error && <InputError>{error}</InputError>}

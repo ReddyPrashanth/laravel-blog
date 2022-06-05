@@ -9,7 +9,7 @@ const TheExperience = () => {
                 </div>
                 <div className="w-3/5 ml-20">
                     <div className="mb-4">
-                        <h4 className="font-medium text-lg">Mid Level Software Engineer</h4>
+                        <h4 className="font-medium text-lg">Software Engineer II</h4>
                         <div>
                             <p className="text-sm py-1 text-teal-600">KBR Inc. / Oct 2018 - Present</p>
                             <p className="text-sm leading-loose">
