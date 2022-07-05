@@ -2,24 +2,24 @@
 
 namespace Tests\Feature\Models;
 
-use App\Models\Content;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PostTest extends TestCase
-{
-    private $post;
+{    
+    private $user;
 
-    private $contents;
+    private $posts;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->post = Post::factory()->create()->toArray();
-        $this->contents = Content::factory()->create(["post_id" => $this->post["id"]])->toArray();
+        $this->user = User::first();
+        $this->posts = Post::without(['contents', 'files'])->get()->toArray();
     }
 
     /**
@@ -29,65 +29,32 @@ class PostTest extends TestCase
      */
     public function test_get_posts()
     {
-        $response = $this->get(route("posts.index"));
+        $response = $this
+            ->get(route("posts.index"));
 
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                "data" => [
-                    $this->post
-                ]
+                "data" => $this->posts
             ]);
     }
 
-    public function test_get_post()
-    {
-        $this->post["contents"] = [$this->contents];
-
-        $response = $this->get(
-            route(
-                "posts.show", 
-                [
-                    "post" => $this->post["id"]
-                ]
-            )
-        );
-
+    public function test_get_single_post()
+    {   
+        $post = Post::first()->toArray();
+        $response = $this
+            ->actingAs($this->user, 'sanctum')
+            ->get(
+                route(
+                    "posts.show", 
+                    $post['id']
+                )
+            );
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                "data" => $this->post
+                "data" => $post
             ]);
-    }
-
-    public function test_create_post()
-    {
-        Storage::fake("photos");
-
-        $post = Post::factory()->make();
-        $payload = [
-            "title" => $post->title,
-            "description" => $post->description,
-            "gist" => $post->gist,
-            "files" => UploadedFile::fake()->image("photo1.jpg")
-        ];
-
-        $response = $this->post(
-            route("posts.store"),
-            $payload
-        );
-
-        $response
-            ->assertStatus(Response::HTTP_CREATED)
-            ->assertJsonStructure([
-                "data" => [
-                    "title",
-                    "description",
-                    "created_at",
-                    "updated_at"
-                ]
-            ]);
-        $this->assertDatabaseHas("posts", $post->toArray());
     }
 
     public function test_create_post_422()
@@ -97,6 +64,7 @@ class PostTest extends TestCase
         ];
 
         $response = $this
+            ->actingAs($this->user, 'sanctum')
             ->withHeaders($this->headers)
             ->post(
                 route("posts.store"),
@@ -113,17 +81,50 @@ class PostTest extends TestCase
             ]);
     }
 
+
+    public function test_create_post()
+    {
+        Storage::fake("photos");
+
+        $post = Post::factory()->make()->toArray();
+        $payload = [
+            "title" => $post['title'],
+            "description" => $post['description'],
+            "gist" => $post['gist'],
+            "files" => UploadedFile::fake()->image("photo1.jpg")
+        ];
+
+        $response = $this
+            ->actingAs($this->user, 'sanctum')
+            ->post(
+                route("posts.store"),
+                $payload
+            );
+
+        $response
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                "data" => [
+                    "title",
+                    "description",
+                    "created_at",
+                    "updated_at"
+                ]
+            ]);
+        $this->assertDatabaseHas("posts", $post);
+    }
+
     public function test_delete_post_404()
     {
-        $response = $this->delete(
-            route(
-                "posts.destroy",
-                [
-                    "post" => 0
-                ]
-            )
-        );
-
+        $response = $this
+            ->actingAs($this->user, 'sanctum')
+            ->withHeaders($this->headers)
+            ->delete(
+                route(
+                    "posts.destroy",
+                    0
+                )
+            );
         $response
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJson(
@@ -135,17 +136,20 @@ class PostTest extends TestCase
 
     public function test_delete_post()
     {
-        $response = $this->delete(
-            route(
-                "posts.destroy",
-                [
-                    "post" => $this->post['id']
-                ]
-            )
-        );
+        $post = Post::without(['contents', 'files'])->orderBy('id', 'desc')->first()->toArray();
+        $response = $this
+            ->actingAs($this->user, 'sanctum')
+            ->delete(
+                route(
+                    "posts.destroy",
+                    [
+                        "post" => $post['id']
+                    ]
+                )
+            );
 
         $response
             ->assertStatus(Response::HTTP_NO_CONTENT);
-        $this->assertDatabaseMissing("posts", $this->post);
+        $this->assertDatabaseMissing("posts", $post);
     }
 }
