@@ -14,6 +14,7 @@ services:
     working_dir: /var/www
     depends_on:
       - database
+      - redis
     volumes:
       - ./application:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
@@ -33,30 +34,69 @@ services:
       - ./application:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d
     networks:
-      - blog-network
+      blog-network:
+        ipv4_address: 172.10.0.10
 
   database:
-    image: mysql:5.7.22
+    image: postgres:10.5
     container_name: database
     restart: unless-stopped
     tty: true
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
       MYSQL_DATABASE: laravel_blog
       MYSQL_ROOT_PASSWORD: secret
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - dbdata:/var/lib/mysql
-      - ./mysql/my.cnf:/etc/mysql/my.cnf
-      - ./mysql/scripts/init.sql://docker-entrypoint-initdb.d/1.sql
+      - dbdata:/var/lib/postgresql/data
+      - ./database/scripts/init.sh:/docker-entrypoint-initdb.d/init-user-db.sh
     networks:
       - blog-network
+
+  redis:
+    image: redis:7.0.0-alpine
+    container_name: redis
+    restart: unless-stopped
+    tty: true
+    hostname: redis
+    command: redis-server --appendonly yes
+    ports:
+      - "127.0.0.1:6379:6379"
+    environment:
+      SERVICE_TAGS: dev
+      SERVICE_NAME: redis
+    volumes:
+      - redisdata:/data
+      # - ./redis/redis.conf:/etc/redis/redis.conf
+    networks:
+      - blog-network
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    image: blogsite_ui
+    container_name: ui
+    volumes:
+      - ./ui:/app
+    ports:
+      - "3000:3000"
+    networks:
+      blog-network:
+        ipv4_address: 172.10.0.11
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - SERVICE_NAME=ui
+      - SERVICE_TAGS=dev
+
 volumes:
   dbdata:
+    driver: local
+  redisdata:
     driver: local
 
 networks:
   blog-network:
-    driver: bridge
+    external: true

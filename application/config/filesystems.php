@@ -73,4 +73,7 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'files_path' => env('FILES_PATH', 'files'),
+
+    'bucket_path' => env('S3_BUCKET_PATH', 'https://psreepathi-portfolio.s3.us-east-2.amazonaws.com'),
 ];

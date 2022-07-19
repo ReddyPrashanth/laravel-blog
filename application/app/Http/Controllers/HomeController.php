@@ -11,5 +11,5 @@ class HomeController extends Controller
             'status' => 'OK'
         );
         return response()->json($response);
-    }    
+    }
 }

@@ -2,7 +2,12 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
+use Illuminate\Validation\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -43,8 +48,22 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            return response()->json([
+                "message" => "Resource not found."
+            ], Response::HTTP_NOT_FOUND);
+        });
+
+        $this->renderable(function (AuthenticationException $e) {
+            return response()->json([
+                "message" => "Unauthenticated",
+            ], Response::HTTP_UNAUTHORIZED);
+        });
+
+        $this->renderable(function (UnauthorizedException $e) {
+            return response()->json([
+                "message" => $e->getMessage(),
+            ], Response::HTTP_UNAUTHORIZED);
         });
     }
 }

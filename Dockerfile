@@ -12,13 +12,14 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
+    libpq-dev \
     curl
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
-RUN docker-php-ext-install pdo_mysql zip exif pcntl sockets
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql && docker-php-ext-install pdo pdo_pgsql zip exif pcntl sockets
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -31,13 +32,6 @@ COPY ./application /var/www
 
 # Copy existing application directory permissions
 COPY --chown=www:www ./application /var/www
-
-# RUN composer install \
-#     --no-interaction \
-#     --no-plugins \
-#     --no-scripts \
-#     --no-dev \
-#     --prefer-dist
 
 # Change current user to www
 USER www
